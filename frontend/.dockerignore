@@ -1,0 +1,11 @@
+node_modules
+.env
+.next
+out
+build
+.env.local
+*.log
+.git
+.gitignore
+firebase.json
+.firebaserc

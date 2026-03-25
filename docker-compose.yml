@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ai-recruiter-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ai_recruiter
+      MYSQL_USER: recruiter
+      MYSQL_PASSWORD: recruiter123
+    command: --sort_buffer_size=4M
+    ports:
+      - "3307:3306" # 3307 to avoid conflict with datagenius MySQL on 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - recruiter-network
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai-recruiter-api
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./backend/.env
+    environment:
+      - PORT=8001
+      - DATABASE_URL=mysql+pymysql://recruiter:recruiter123@mysql:3306/ai_recruiter
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/firebase-credentials.json:/app/firebase-credentials.json
+    networks:
+      - recruiter-network
+
+volumes:
+  mysql_data:
+
+
+networks:
+  recruiter-network:
+    driver: bridge

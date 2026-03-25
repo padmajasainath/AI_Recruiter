@@ -1,0 +1,20 @@
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+company_id	varchar(36)	NO	MUL	NULL	
+job_id	varchar(20)	YES	UNI	NULL	
+title	varchar(255)	NO		NULL	
+description	text	NO		NULL	
+skills_required	json	NO		NULL	
+years_of_experience_min	int	NO		NULL	
+years_of_experience_max	int	YES		NULL	
+expected_salary_min	int	YES		NULL	
+expected_salary_max	int	YES		NULL	
+salary_currency	varchar(10)	YES		NULL	
+location	varchar(255)	YES		NULL	
+location_type	enum('REMOTE','HYBRID','ONSITE')	NO		NULL	
+department	varchar(100)	YES		NULL	
+screening_threshold	int	NO		NULL	
+application_link_token	varchar(64)	NO	UNI	NULL	
+status	enum('ACTIVE','PAUSED','CLOSED')	NO		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	NO		NULL	

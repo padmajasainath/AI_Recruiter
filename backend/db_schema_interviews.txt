@@ -1,0 +1,29 @@
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+application_id	varchar(36)	NO	MUL	NULL	
+interview_token	varchar(64)	YES	UNI	NULL	
+token_expires_at	datetime	NO		NULL	
+datagenius_session_id	varchar(36)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+candidate_availability	json	YES		NULL	
+booking_link	text	YES		NULL	
+status	enum('PENDING','SCHEDULED','IN_PROGRESS','COMPLETED','CANCELLED')	NO		NULL	
+interview_type	varchar(20)	YES		NULL	
+time_limit_minutes	int	YES		NULL	
+started_at	datetime	YES		NULL	
+transcript	json	YES		NULL	
+questions_asked	int	YES		NULL	
+interview_score	float	YES		NULL	
+interview_feedback	text	YES		NULL	
+interview_topics	json	YES		NULL	
+interview_duration_minutes	int	YES		NULL	
+ai_summary	text	YES		NULL	
+ai_strengths	json	YES		NULL	
+ai_weaknesses	json	YES		NULL	
+ai_improvements	json	YES		NULL	
+completed_at	datetime	YES		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	NO		NULL	
+recording_url	text	YES		NULL	
+recording_status	enum('PENDING','UPLOADED','PROCESSED','FAILED')	YES		PENDING	
+recording_web_url	text	YES		NULL	
