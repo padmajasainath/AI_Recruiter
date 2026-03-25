@@ -36,11 +36,15 @@ To run the entire stack locally with hot-reloading:
     - Copy `backend/.env.example` to `backend/.env`.
     - Copy `frontend/.env.example` to `frontend/.env.local`.
     - Fill in the required API keys (Gemini, Firebase, Microsoft Graph).
-3.  **Start with Docker**:
+3.  **Start with Dev CLI**:
     ```bash
-    docker-compose up --build
+    ./dev.sh start
     ```
-4.  **Access**:
+4.  **Useful Commands**:
+    - `./dev.sh stop` - Stop services.
+    - `./dev.sh logs` - View real-time logs.
+    - `./dev.sh status` - Check what's running.
+    - `./dev.sh clean` - Wipe local database/volumes.
+5.  **Access**:
     - Frontend: [http://localhost:3000](http://localhost:3000)
     - Backend API: [http://localhost:8001](http://localhost:8001)
-    - Database: Local MySQL on port `3307`.
