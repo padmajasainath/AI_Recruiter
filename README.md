@@ -1,5 +1,7 @@
 # AI Recruiter 🚀
 
+[![Deploy to Cloud Run](https://github.com/cloudmetica/AI_Recruiter/actions/workflows/deploy.yml/badge.badge.svg)](https://github.com/cloudmetica/AI_Recruiter/actions/workflows/deploy.yml)
+
 Agentic AI-led recruitment tracker and screening portal.
 
 ## Architecture
