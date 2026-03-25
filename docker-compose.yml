@@ -45,6 +45,25 @@ services:
     networks:
       - recruiter-network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-recruiter-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env.local
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/package.json:/app/package.json
+    depends_on:
+      - api
+    networks:
+      - recruiter-network
+
 volumes:
   mysql_data:
 

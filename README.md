@@ -28,3 +28,19 @@ Refer to the `docs/` folder for detailed guides:
 - [Cloud Run Deployment](docs/CLOUD_RUN_DEPLOYMENT.md)
 - [Project Playbook](docs/PLAYBOOK.md)
 - [UI/UX Refinement](docs/UI_UX_REFINEMENT_CHECKLIST.md)
+
+## Local Development
+To run the entire stack locally with hot-reloading:
+1.  **Clone the repository**.
+2.  **Environment Setup**:
+    - Copy `backend/.env.example` to `backend/.env`.
+    - Copy `frontend/.env.example` to `frontend/.env.local`.
+    - Fill in the required API keys (Gemini, Firebase, Microsoft Graph).
+3.  **Start with Docker**:
+    ```bash
+    docker-compose up --build
+    ```
+4.  **Access**:
+    - Frontend: [http://localhost:3000](http://localhost:3000)
+    - Backend API: [http://localhost:8001](http://localhost:8001)
+    - Database: Local MySQL on port `3307`.
