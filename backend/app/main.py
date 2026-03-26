@@ -75,6 +75,16 @@ async def lifespan(app: FastAPI):
             if "job_id" not in cols:
                 conn.execute(text("ALTER TABLE jobs ADD COLUMN job_id VARCHAR(20) NULL"))
             
+            job_updates = {
+                "interview_duration_mins": "INT NOT NULL DEFAULT 30",
+                "interview_link_expiry_hours": "INT NOT NULL DEFAULT 72",
+                "ai_interview_prompt": "TEXT NULL"
+            }
+            for col, ctype in job_updates.items():
+                if col not in cols:
+                    logger.info(f"🛠 Adding missing column {col} to jobs")
+                    conn.execute(text(f"ALTER TABLE jobs ADD COLUMN {col} {ctype}"))
+            
             conn.commit()
         logger.info("✅ Database schema verified/updated")
     except Exception as e:

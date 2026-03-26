@@ -32,8 +32,11 @@ class Job(Base):
     )
     department = Column(String(100), nullable=True)
 
-    # AI Screening
+    # AI Screening & Interview Settings
     screening_threshold = Column(Integer, nullable=False, default=70)  # 0-100 score threshold
+    interview_duration_mins = Column(Integer, nullable=False, default=30)
+    interview_link_expiry_hours = Column(Integer, nullable=False, default=72)
+    ai_interview_prompt = Column(Text, nullable=True) # Custom instructions for the AI interviewer
 
     # Application link
     application_link_token = Column(

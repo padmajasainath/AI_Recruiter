@@ -67,6 +67,7 @@ async def verify_firebase_token(
     token = credentials.credentials
 
     try:
+        # Verify the token against Firebase
         decoded_token = auth.verify_id_token(token)
         return decoded_token
     except auth.ExpiredIdTokenError:

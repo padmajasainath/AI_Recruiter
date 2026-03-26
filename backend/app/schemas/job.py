@@ -33,6 +33,9 @@ class JobCreate(BaseModel):
     location_type: LocationType = LocationType.REMOTE
     department: Optional[str] = None
     screening_threshold: int = Field(default=70, ge=0, le=100)
+    interview_duration_mins: int = Field(default=30, ge=5, le=90)
+    interview_link_expiry_hours: int = Field(default=72, ge=1, le=168)
+    ai_interview_prompt: Optional[str] = None
 
 
 class JobUpdate(BaseModel):
@@ -48,6 +51,9 @@ class JobUpdate(BaseModel):
     location_type: Optional[LocationType] = None
     department: Optional[str] = None
     screening_threshold: Optional[int] = None
+    interview_duration_mins: Optional[int] = None
+    interview_link_expiry_hours: Optional[int] = None
+    ai_interview_prompt: Optional[str] = None
     status: Optional[JobStatus] = None
 
 
@@ -67,6 +73,9 @@ class JobResponse(BaseModel):
     location_type: str
     department: Optional[str]
     screening_threshold: int
+    interview_duration_mins: int
+    interview_link_expiry_hours: int
+    ai_interview_prompt: Optional[str]
     application_link_token: str
     status: str
     application_count: Optional[int] = 0
@@ -80,3 +89,8 @@ class JobResponse(BaseModel):
 class JobListResponse(BaseModel):
     jobs: list[JobResponse]
     total: int
+
+
+class GeneratePromptRequest(BaseModel):
+    title: str = Field(..., min_length=1)
+    description: str = Field(..., min_length=10)

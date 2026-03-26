@@ -394,7 +394,7 @@ async def send_interview_scheduling_email(
             
             <h2 style="color: #667eea; font-size: 18px;">What to expect:</h2>
             <ul style="font-size: 15px; line-height: 1.8;">
-                <li>⏱️ Duration: approximately 30-45 minutes</li>
+                <li>⏱️ Duration: approximately {job.interview_duration_mins} minutes</li>
                 <li>💻 Topics related to: {', '.join(job.skills_required[:5]) if job.skills_required else 'the role requirements'}</li>
                 <li>🎙️ Live audio-based conversation with our AI interviewer</li>
                 <li>📊 Immediate feedback and scoring</li>
@@ -711,7 +711,7 @@ Body: {body_text}
 1. **BE CONCISE**: Focus on replying to what the candidate just said. Do NOT repeat yourself if information was already shared in the history.
 2. **NO JD DUMPING**: Do NOT include details from the Job Description unless the candidate SPECIFICALLY asked a question about the role's responsibilities or requirements. If they are just saying thanks or sharing availability, don't mention the JD at all.
 3. **Conversational Flow**: If the candidate is sharing availability, acknowledge it warmly and let them know you'll send a scheduling link soon.
-4. **Specific Questions**: If they have questions about the interview process, answer it simply: It's an AI-led live technical interview, ~30-45 minutes, covering skills relevant to the role.
+4. **Specific Questions**: If they have questions about the interview process, answer it simply: It's an AI-led live technical interview, approximately {job.interview_duration_mins} minutes, covering skills relevant to the role.
 5. **Format**: Do NOT include a greeting (e.g. "Hi John") or a sign-off. These are added automatically.
 6. **No Attachments**: You CANNOT attach files. Include all necessary info in the text if (and only if) requested.
 
@@ -866,7 +866,7 @@ async def send_interview_link_email(
             </p>
             
             <p style="font-size: 16px; line-height: 1.6;">
-                Your AI-led voice interview is now ready. You can complete this anytime in the next <strong>72 hours</strong>.
+                Your AI-led voice interview is now ready. You can complete this anytime in the next <strong>{job.interview_link_expiry_hours} hours</strong>.
             </p>
             
             <div style="text-align: center; margin: 32px 0;">
@@ -877,12 +877,12 @@ async def send_interview_link_email(
             <ul style="font-size: 15px; line-height: 1.8; margin-bottom: 24px;">
                 <li>🎤 Use a device with a working microphone (headphones recommended)</li>
                 <li>🤫 Sit in a quiet environment</li>
-                <li>⏱️ The session will take about 30 minutes</li>
+                <li>⏱️ The session will take about {job.interview_duration_mins} minutes</li>
                 <li>🌐 Use a stable internet connection</li>
             </ul>
             
             <p style="font-size: 14px; color: #718096; background: #f8fafc; padding: 16px; border-radius: 8px; border-left: 4px solid #667eea;">
-                <strong>Note:</strong> This link is unique to you and will expire in 72 hours. Please do not share it with others.
+                <strong>Note:</strong> This link is unique to you and will expire in {job.interview_link_expiry_hours} hours. Please do not share it with others.
             </p>
             
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />

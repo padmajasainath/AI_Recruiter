@@ -158,7 +158,8 @@ async def _run_screening_pipeline(
                 interview = Interview(
                     application_id=application.id,
                     status="PENDING",
-                    token_expires_at=datetime.utcnow() + timedelta(hours=72)
+                    time_limit_minutes=job.interview_duration_mins,
+                    token_expires_at=datetime.utcnow() + timedelta(hours=job.interview_link_expiry_hours)
                 )
                 db.add(interview)
                 db.commit()

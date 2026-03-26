@@ -10,17 +10,33 @@ from app.services.firebase_auth import verify_firebase_token
 from app.models.company import CompanyMember
 from app.models.job import Job
 from app.models.candidate import Application
-from app.schemas.job import JobCreate, JobUpdate, JobResponse, JobListResponse
+from app.schemas.job import JobCreate, JobUpdate, JobResponse, JobListResponse, GeneratePromptRequest
+from app.services.job_ai_service import generate_default_interview_prompt
 
 router = APIRouter(prefix="/api/jobs", tags=["jobs"])
 
 
 def _get_member(token: dict, db: Session) -> CompanyMember:
-    """Helper to get the company member from Firebase token."""
     member = db.query(CompanyMember).filter(CompanyMember.firebase_uid == token["uid"]).first()
     if not member:
         raise HTTPException(status_code=403, detail="Not registered as a company member")
     return member
+
+
+
+@router.post("/generate-prompt", response_model=dict)
+async def generate_prompt(
+    data: GeneratePromptRequest,
+    token: dict = Depends(verify_firebase_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Endpoint for recruiters to generate a default AI prompt
+    based on the job title and description.
+    """
+    _get_member(token, db) # Ensure they are a member
+    prompt = await generate_default_interview_prompt(data.title, data.description)
+    return {"prompt": prompt}
 
 
 @router.post("", response_model=JobResponse, status_code=201)
@@ -47,6 +63,9 @@ async def create_job(
         department=data.department,
         screening_threshold=data.screening_threshold,
         job_id=data.job_id,
+        interview_duration_mins=data.interview_duration_mins,
+        interview_link_expiry_hours=data.interview_link_expiry_hours,
+        ai_interview_prompt=data.ai_interview_prompt,
     )
     db.add(job)
     db.commit()
@@ -107,10 +126,26 @@ async def update_job(
         raise HTTPException(status_code=404, detail="Job not found")
 
     update_data = data.model_dump(exclude_unset=True)
+    
+    # Track if interview_duration_mins is being updated to sync existing interviews
+    duration_updated = "interview_duration_mins" in update_data
+    new_duration = update_data.get("interview_duration_mins")
+
     for key, value in update_data.items():
         if key == "location_type" and value:
             value = value.value
         setattr(job, key, value)
+
+    # Sync pending interviews if duration changed
+    if duration_updated and new_duration is not None:
+        from app.models.interview import Interview
+        # Fetch application IDs first for reliability
+        app_ids = [r[0] for r in db.query(Application.id).filter(Application.job_id == job.id).all()]
+        if app_ids:
+            db.query(Interview).filter(
+                Interview.application_id.in_(app_ids),
+                Interview.status == "PENDING"
+            ).update({"time_limit_minutes": new_duration}, synchronize_session=False)
 
     db.commit()
     db.refresh(job)
@@ -174,6 +209,9 @@ def _job_to_response(job: Job, db: Session) -> JobResponse:
         location_type=job.location_type,
         department=job.department,
         screening_threshold=job.screening_threshold,
+        interview_duration_mins=job.interview_duration_mins,
+        interview_link_expiry_hours=job.interview_link_expiry_hours,
+        ai_interview_prompt=job.ai_interview_prompt,
         application_link_token=job.application_link_token,
         status=job.status,
         application_count=app_count,

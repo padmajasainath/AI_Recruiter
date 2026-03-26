@@ -29,19 +29,28 @@ settings = get_settings()
 # In-memory storage for active sessions
 active_sessions: Dict[str, "GeminiLiveSession"] = {}
 
-def get_system_instruction(candidate_name: str) -> str:
+def get_system_instruction(candidate_name: str, custom_prompt: Optional[str] = None) -> str:
     """Generates the system instruction for the Gemini Live session."""
-    system_prompt = f"You are Alex, an expert AI Technical Interviewer. You are interviewing {candidate_name} for a technical role. Be professional but encouraging."
+    if custom_prompt:
+        persona_and_instructions = custom_prompt
+    else:
+        persona_and_instructions = f"You are Alex, an expert AI Technical Interviewer. You are interviewing {candidate_name} for a technical role. Be professional but encouraging."
+    
     vision_instruction = "You have VISUAL AWARENESS. You can see the candidate through their webcam if they have it turned on. You can acknowledge their surroundings, their expressions, or anything they show you. Use this to make the interview feel more personal and interactive."
-    instruction_text = f"{system_prompt}\n\n{vision_instruction}\n\nYou are in a LIVE VOICE interaction. Keep responses short and conversational. Do not use markdown."
+    
+    # System Framework for technical stability
+    framework = "You are in a LIVE VOICE interaction. Keep responses short and conversational. Do not use markdown."
+    
+    instruction_text = f"{persona_and_instructions}\n\n{vision_instruction}\n\n{framework}"
     return instruction_text
 
 class GeminiLiveSession:
     """Manages a single Multimodal Live session with Gemini."""
     
-    def __init__(self, interview_id: str, candidate_name: str, api_key: str):
+    def __init__(self, interview_id: str, candidate_name: str, api_key: str, custom_prompt: Optional[str] = None):
         self.interview_id = interview_id
         self.candidate_name = candidate_name
+        self.custom_prompt = custom_prompt
         self.client = Client(api_key=api_key)
         self.model = "models/gemini-2.5-flash-native-audio-latest"
         self.session = None
@@ -56,7 +65,7 @@ class GeminiLiveSession:
             config = types.LiveConnectConfig(
                 response_modalities=["AUDIO"],
                 system_instruction=types.Content(
-                    parts=[types.Part(text=get_system_instruction(self.candidate_name))]
+                    parts=[types.Part(text=get_system_instruction(self.candidate_name, self.custom_prompt))]
                 )
             )
             
@@ -238,7 +247,8 @@ async def live_interview_websocket(websocket: WebSocket, token: str, db: Session
     gemini_session = GeminiLiveSession(
         interview_id=str(interview.id),
         candidate_name=application.candidate_name if application else "Candidate",
-        api_key=settings.GEMINI_API_KEY
+        api_key=settings.GEMINI_API_KEY,
+        custom_prompt=job.ai_interview_prompt if job else None
     )
     
     if not await gemini_session.connect():

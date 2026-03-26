@@ -1,0 +1,9 @@
+John Python
+Email: candidate@example.com
+Phone: 555-1234
+Summary: Expert Senior Data Scientist with 8 years of experience in AI.
+Skills: PyTorch, Transformers, LLMs, NLP, Python, FastAPI, SQL.
+Experience:
+- Principal Scientist at AI Corp (2018 - Present): Developing large scale Transformer models in PyTorch.
+- ML Engineer at Tech Solutions (2015 - 2018): Built NLP pipelines and predictive models.
+Education: PhD in Computer Science, Stanford University.
