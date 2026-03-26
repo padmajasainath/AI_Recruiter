@@ -20,7 +20,7 @@ class JobStatus(str, Enum):
 
 
 class JobCreate(BaseModel):
-    job_id: str = Field(..., min_length=1, max_length=20, description="Unique job identifier, e.g., JOB-101")
+    job_id: str = Field(..., min_length=1, max_length=255, description="Unique job identifier, e.g., JOB-101")
     title: str = Field(..., min_length=1, max_length=255)
     description: str = Field(..., min_length=10)
     skills_required: list[str] = Field(default_factory=list)

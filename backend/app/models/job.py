@@ -14,7 +14,7 @@ class Job(Base):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     company_id = Column(String(36), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False, index=True)
-    job_id = Column(String(20), unique=True, index=True, nullable=True) # Will make non-nullable after backfill
+    job_id = Column(String(255), unique=True, index=True, nullable=True) # Will make non-nullable after backfill
 
     # Job details
     title = Column(String(255), nullable=False)

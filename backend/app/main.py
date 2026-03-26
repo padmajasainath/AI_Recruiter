@@ -73,7 +73,7 @@ async def lifespan(app: FastAPI):
             res = conn.execute(text("SHOW COLUMNS FROM jobs"))
             cols = [row[0] for row in res.fetchall()]
             if "job_id" not in cols:
-                conn.execute(text("ALTER TABLE jobs ADD COLUMN job_id VARCHAR(20) NULL"))
+                conn.execute(text("ALTER TABLE jobs ADD COLUMN job_id VARCHAR(255) NULL"))
             
             job_updates = {
                 "interview_duration_mins": "INT NOT NULL DEFAULT 30",
