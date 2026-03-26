@@ -72,7 +72,7 @@ async def register_company(
         company_id=company.id,
         firebase_uid=firebase_uid,
         email=firebase_email,
-        display_name=token.get("name"),
+        display_name=data.admin_name or token.get("name"),
         role="OWNER",
     )
     db.add(member)

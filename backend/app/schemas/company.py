@@ -12,6 +12,7 @@ class CompanyCreate(BaseModel):
     website: Optional[str] = None
     industry: Optional[str] = None
     description: Optional[str] = None
+    admin_name: Optional[str] = None
     
     # Mandatory Outlook Integration
     outlook_tenant_id: str = Field(..., min_length=1)

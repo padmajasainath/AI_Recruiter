@@ -9,6 +9,7 @@ export default function RegisterPage() {
     const router = useRouter();
     const [form, setForm] = useState({
         name: '',
+        admin_name: '',
         email: user?.email || '',
         website: '',
         industry: '',
@@ -65,6 +66,27 @@ export default function RegisterPage() {
                             {error}
                         </div>
                     )}
+                    <div style={{ margin: '0 0 24px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: 600 }}>👤 Your Profile</h3>
+                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>This will be your display name in the platform.</p>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Your Full Name *</label>
+                        <input
+                            className="form-input"
+                            type="text"
+                            value={form.admin_name}
+                            onChange={e => setForm({ ...form, admin_name: e.target.value })}
+                            placeholder="John Doe"
+                            required
+                        />
+                    </div>
+
+                    <div style={{ margin: '32px 0 16px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: 600 }}>🏢 Company Details</h3>
+                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Basic information about your organization.</p>
+                    </div>
 
                     <div className="form-group">
                         <label>Company Name *</label>
