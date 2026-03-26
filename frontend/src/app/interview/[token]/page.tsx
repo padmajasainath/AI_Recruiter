@@ -101,6 +101,10 @@ export default function InterviewPage() {
                     setErrorMessage('This interview link has expired.');
                 } else {
                     setPhase(InterviewPhase.WELCOME);
+                    // Set the timer based on the fetched interview info
+                    if (info.time_limit_minutes) {
+                        setTimeLeft(info.time_limit_minutes * 60);
+                    }
                 }
             } catch (err: any) {
                 console.error('Error fetching interview info:', err);
@@ -323,7 +327,7 @@ export default function InterviewPage() {
                                                 <Clock style={{ width: '16px', height: '16px', color: '#818cf8' }} />
                                             </div>
                                             <div>
-                                                <p style={{ fontWeight: 700, color: 'white', fontSize: '14px' }}>30 Minutes Maximum</p>
+                                                <p style={{ fontWeight: 700, color: 'white', fontSize: '14px' }}>{interviewInfo?.time_limit_minutes || 30} Minutes Maximum</p>
                                                 <p style={{ color: '#64748b', fontSize: '12px' }}>Timer will track your session</p>
                                             </div>
                                         </li>

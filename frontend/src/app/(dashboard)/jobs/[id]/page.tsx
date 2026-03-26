@@ -226,6 +226,32 @@ export default function JobDetailPage() {
                             <div style={{ marginTop: '8px', fontSize: '14px', fontWeight: 600 }}>{editForm.screening_threshold}%</div>
                         </div>
 
+                        <div style={{ padding: '16px', border: '1px solid var(--border)', borderRadius: '8px', marginBottom: '20px', background: 'var(--bg-secondary)' }}>
+                            <h4 style={{ fontSize: '14px', marginBottom: '16px' }}>🤖 AI Interview Settings</h4>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Duration (Mins)</label>
+                                    <input className="form-input" type="number" value={editForm.interview_duration_mins} onChange={e => setEditForm({ ...editForm, interview_duration_mins: +e.target.value })} min={5} max={90} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Link Expiry (Hrs)</label>
+                                    <input className="form-input" type="number" value={editForm.interview_link_expiry_hours} onChange={e => setEditForm({ ...editForm, interview_link_expiry_hours: +e.target.value })} min={1} max={168} />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <label style={{ marginBottom: 0 }}>AI Interview Prompt</label>
+                                    <button type="button" className="btn btn-secondary btn-sm" onClick={async () => {
+                                        try {
+                                            const { prompt } = await api.generatePrompt({ title: editForm.title, description: editForm.description });
+                                            setEditForm({ ...editForm, ai_interview_prompt: prompt });
+                                        } catch (err: any) { alert(err.message); }
+                                    }}>✨ Re-generate</button>
+                                </div>
+                                <textarea className="form-input" value={editForm.ai_interview_prompt || ''} onChange={e => setEditForm({ ...editForm, ai_interview_prompt: e.target.value })} rows={5} />
+                            </div>
+                        </div>
+
                         <button type="submit" className="btn btn-primary" disabled={saving}>
                             {saving ? 'Saving...' : 'Save Job Posting'}
                         </button>
@@ -257,7 +283,16 @@ export default function JobDetailPage() {
                                 <strong>Salary:</strong> {job.expected_salary_min ? `${job.expected_salary_min.toLocaleString()} ${job.salary_currency}` : '—'}
                                 {job.expected_salary_max ? ` - ${job.expected_salary_max.toLocaleString()} ${job.salary_currency}` : ''}
                             </div>
-                            <div><strong>Threshold:</strong> {job.screening_threshold}%</div>
+                            <div style={{ marginBottom: '8px' }}><strong>Threshold:</strong> {job.screening_threshold}%</div>
+                            <div style={{ borderTop: '1px solid var(--border)', marginTop: '12px', paddingTop: '12px' }}>
+                                <div style={{ marginBottom: '8px' }}><strong>AI Duration:</strong> {job.interview_duration_mins} mins</div>
+                                <div style={{ marginBottom: '8px' }}><strong>Link Expiry:</strong> {job.interview_link_expiry_hours} hrs</div>
+                                {job.ai_interview_prompt && (
+                                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontStyle: 'italic', marginTop: '8px', border: '1px dashed var(--border)', padding: '8px', borderRadius: '4px' }}>
+                                        Custom AI Persona Active
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

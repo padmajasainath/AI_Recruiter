@@ -68,6 +68,8 @@ export const api = {
     deleteJob: (id: string) =>
         apiFetch(`/api/jobs/${id}`, { method: 'DELETE' }),
     getJobLink: (id: string) => apiFetch(`/api/jobs/${id}/link`),
+    generatePrompt: (data: { title: string; description: string }) =>
+        apiFetch('/api/jobs/generate-prompt', { method: 'POST', body: JSON.stringify(data) }),
 
     // Applications
     listApplications: (jobId: string, status?: string) =>
